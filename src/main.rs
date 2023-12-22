@@ -1,6 +1,5 @@
-use std::env;
-
 use git_starter_rust::run;
+use std::env;
 
 #[cfg(not(tarpaulin_include))]
 fn main() {
