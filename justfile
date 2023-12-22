@@ -9,3 +9,11 @@ coverage:
 
 cctest:
     codecrafters test
+
+install_cctest:
+    curl https://codecrafters.io/install.sh | sh
+
+ready:
+    just install_cctest&
+    cargo build
+    cargo test
