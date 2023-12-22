@@ -13,7 +13,6 @@ pub fn run(args: &Vec<String>) -> String {
     }
 }
 
-#[cfg(not(tarpaulin_include))]
 fn init() -> String {
     fs::create_dir(".git").unwrap();
     fs::create_dir(".git/objects").unwrap();
