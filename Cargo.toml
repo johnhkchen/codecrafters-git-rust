@@ -30,4 +30,6 @@ anyhow = "1.0.59"                                                  # error handl
 thiserror = "1.0.32"                                               # error handling
 
 [dev-dependencies]
+assert_fs = "1.0.13"
+predicates = "3.0.4"
 tempfile = "3.8.1"
