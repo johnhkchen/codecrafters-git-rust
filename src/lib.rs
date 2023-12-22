@@ -23,58 +23,55 @@ fn init() -> String {
 }
 
 fn cat_file(args: &Vec<String>) -> String {
-    print!("Args: ");
-    for param in args {
-        print!("{param} ");
+    if args.len() == 1 {
+        return format!("usage: git cat-file <object>")
     }
-    println!("");
-    format!("bar")
+    let object_name = &args[2];
+    format!("fatal: Not a valid object name {object_name}")
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn to_args(line: &str) -> Vec<String> {
-        // drop the first one because it's 'git'
+    fn get_args(line: &str) -> Vec<String> {
         line.split_whitespace()
             .skip(1)
             .map(str::to_string)
             .collect()
     }
 
+    fn run_query(line: &str) -> String {
+        run(&get_args(line))
+    }
+
     #[test]
     fn it_prints_usage() {
-        let args = to_args("git");
-        let results = run(&args);
-        assert_eq!("usage: git <command> [<args>]", results);
+        assert_eq!("usage: git <command> [<args>]", run_query("git"));
     }
 
     #[test]
     fn it_rejects_invalid_commands() {
-        // let args = vec!["barf".into()];
-        let args = to_args("git barf");
-        let results = run(&args);
         assert_eq!(
             "git: 'barf' is not a git command. See 'git --help'.",
-            results
+            run_query("git barf")
         );
     }
 
     #[ignore]
     #[test]
     fn it_runs_init() {
-        // This test currently breaks because it does not clean up afterwards
-        let args = to_args("git init");
-        let results = run(&args);
-        assert_eq!("Initialized git directory", results);
+        assert_eq!("Initialized git directory", run_query("git init"));
     }
 
     #[test]
-    fn it_runs_cat_file() {
-        // This test currently breaks because it does not clean up afterwards
-        let args = to_args("git cat-file");
-        let results = run(&args);
-        assert_eq!("bar", results);
+    fn it_runs_cat_file_usage() {
+        assert_eq!("usage: git cat-file <object>", run_query("git cat-file"));
+    }
+
+    #[test]
+    fn it_runs_cat_file_emits_error_invalid_object_name() {
+        assert_eq!("fatal: Not a valid object name 12345", run_query("git cat-file -p 12345"));
+        assert_eq!("fatal: Not a valid object name 67890", run_query("git cat-file -p 67890"));
     }
 }
